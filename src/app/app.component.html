@@ -1,0 +1,155 @@
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h1>Product Management</h1>
+    </div>
+    <div class="sidebar-menu">
+      <h3>Vendors</h3>
+      <ul>
+        <li *ngFor="let vendor of vendors">
+          {{ vendor.first_name }} {{ vendor.last_name }}
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-menu">
+      <h3>Categories</h3>
+      <ul>
+        <li *ngFor="let category of categories">
+          {{ category.name }}
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-menu">
+      <ul>
+        <li>
+          <a (click)="toggleAddOption('vendor')">Add Vendor</a>
+          <div class="submenu" *ngIf="showAddOption === 'vendor'">
+            <input type="text" [(ngModel)]="vendorFirstName" placeholder="First Name" />
+            <input type="text" [(ngModel)]="vendorLastName" placeholder="Last Name" />
+            <button (click)="addVendor()">Add</button>
+          </div>
+        </li>
+        <li>
+          <a (click)="toggleAddOption('category')">Add Category</a>
+          <div class="submenu" *ngIf="showAddOption === 'category'">
+            <input type="text" [(ngModel)]="categoryName" placeholder="Category Name" />
+            <button (click)="addCategory()">Add</button>
+          </div>
+        </li>
+        <li>
+          <a (click)="toggleAddOption('product')">Add Product</a>
+          <div class="submenu" *ngIf="showAddOption === 'product'">
+            <input type="text" [(ngModel)]="productName" placeholder="Product Name" required>
+            <div *ngIf="productNameInvalid" class="error-message">Product Name is required</div>
+            <input type="number" [(ngModel)]="productPrice" placeholder="Product Price" required>
+            <div *ngIf="productPriceInvalid" class="error-message">Product Price is required</div>
+            <select [(ngModel)]="vendorId" placeholder="Select Vendor" required>
+              <option value="">Select Vendor</option>
+              <option *ngFor="let vendor of vendors" [value]="vendor.id">{{ vendor.first_name }} {{ vendor.last_name }}</option>
+            </select>
+            <div *ngIf="vendorIdInvalid" class="error-message">Vendor is required</div>
+            <select [(ngModel)]="categoryId" placeholder="Select Category" required>
+              <option value="">Select Category</option>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            <div *ngIf="categoryIdInvalid" class="error-message">Category is required</div>
+            <button (click)="addProduct()">Add</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <h1>Product List</h1>
+    <div class="search-section">
+      <div class="search-by-category">
+        <h2>Search by Category</h2>
+        <input type="text" [(ngModel)]="categorySearch" placeholder="Enter category name" />
+        <button (click)="searchByCategory()">Search</button>
+      </div>
+      
+  
+      <div class="search-by-price">
+        <h2>Search by Max Price</h2>
+        <input type="number" [(ngModel)]="maxPrice" placeholder="Enter max price" />
+        <button (click)="searchByMaxPrice()">Search</button>
+      </div>
+    </div>
+  <div class="delete-by-name">
+    <h2>Delete by Name</h2>
+    <input type="text" [(ngModel)]="productNameToDelete" placeholder="Product Name" />
+    <button class="bt-clr" (click)="deleteProductByName(productNameToDelete)">Delete</button>
+ </div>
+ <div class="get-vendor-products">
+  <h2>Get Vendor Products</h2>
+  <label>Vendor First Name:</label>
+    <input [(ngModel)]="vendorFirstName" type="text">
+    <label>Vendor Last Name:</label>
+    <input [(ngModel)]="vendorLastName" type="text">
+    <button (click)="getProductsByVendor()">Search by Vendor</button>
+  <div>
+    <div class="search-by-id">
+      <h2>Search by Product-id</h2>
+      <input type="text" [(ngModel)]="productIdSearch" placeholder="Enter product ID" />
+      <button (click)="searchProductById()">Search</button>
+    </div>
+  </div>
+ </div>
+<table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Vendor</th>
+          <th>Category</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ getVendorName(product.vendor_id) }}</td>
+          <td>{{ getCategoryName(product.category_id) }}</td>
+          <td>
+            <button class="bt-clr" (click)="deleteProductById(product.id)">Delete</button>
+           </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="search-result">
+      <h2>Search Result</h2>
+      <table *ngIf="filteredProducts.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Vendor</th>
+            <th>Category</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ getVendorName(product.vendor_id) }}</td>
+            <td>{{ getCategoryName(product.category_id) }}</td>
+           
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="filteredProducts.length === 0">
+        No products found.
+      </div>
+   
+      
+
+    </div>
+</div>
